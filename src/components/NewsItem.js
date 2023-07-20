@@ -3,7 +3,7 @@ import React from "react";
 export default function NewsItem(props) {
   return (
     <div className="card mx-4 my-4 text-center">
-      <span className="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-success">
+      <span className="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger">
         {props.source}
       </span>
       <img src={props.url} className="card-img-top" alt="failed to load img" />
@@ -13,6 +13,7 @@ export default function NewsItem(props) {
         <a
           href={props.newsUrl}
           target="_blank"
+          rel="noreferrer"
           className="btn btn-sm btn-primary text-center"
         >
           Check this out

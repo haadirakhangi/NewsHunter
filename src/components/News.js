@@ -49,7 +49,7 @@ export default function News(props) {
   return (
     <>
       <div className="container">
-        <h2 className="text-center my-3">NewsHunter - Top {capitalize(props.category)} headline</h2>
+        <h2 className="text-center" style={{marginTop: "50px"}}>NewsHunter - Top {capitalize(props.category)} headline</h2>
         <div className="text-center">{loading && <Spinner/>}</div>
         <div className="row">
           {article.map((element) => {

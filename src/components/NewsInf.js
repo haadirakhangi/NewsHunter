@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import LoadingBar from 'react-top-loading-bar'
 import PropTypes from "prop-types";
 import NewsItem from "./NewsItem";
 import Spinner from "./Spinner";
@@ -9,6 +10,7 @@ export default function News(props) {
   const [page, setpage] = useState(1);
   const [totalResults, settotalResults] = useState(0);
   const [loading, setloading] = useState(false);
+  const [progress, setprogress] = useState(0)
 
   const capitalize = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -16,20 +18,24 @@ export default function News(props) {
 
   useEffect(() => {
     fetchArticles();
+    // eslint-disable-next-line
   }, []);
 
   const fetchArticles = async () => {
     try {
+      setprogress(20)
       setloading(true);
       const response = await fetch(
-        `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=d94174f27893413fadfeed2df73fbeb0&page=${page}&pageSize=${props.pageSize}`
+        `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.api}&page=${page}&pageSize=${props.pageSize}`
       );
+      setprogress(70)
       const data = await response.json();
       setArticle(data.articles);
       settotalResults(data.totalResults);
       setloading(false);
       setpage(page+1)
       document.title = capitalize(props.category) + " - NewsHunter";
+      setprogress(100)
     } catch (error) {
       console.log(error);
     }
@@ -38,7 +44,7 @@ export default function News(props) {
   const fetchMoreData = async () => {
     try {
       const response = await fetch(
-        `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=d94174f27893413fadfeed2df73fbeb0&page=${page}&pageSize=${props.pageSize}`
+        `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.api}&page=${page}&pageSize=${props.pageSize}`
       );
       const data = await response.json();
       setArticle(article.concat(data.articles));
@@ -51,7 +57,8 @@ export default function News(props) {
 
   return (
     <>
-      <h2 className="text-center my-3">
+    <LoadingBar color='#f11946' progress={progress} onLoaderFinished={() => setprogress(0)}/>
+      <h2 className="text-center" style={{marginTop:"10vh"}}>
         NewsHunter - Top {capitalize(props.category)} headline
       </h2>
       <div className="text-center">{loading && <Spinner />}</div>
